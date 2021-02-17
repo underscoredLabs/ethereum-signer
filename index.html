@@ -1,0 +1,32 @@
+<script src="./ethereumjs-tx.js"></script>
+<script src="./buffer.js"></script>
+
+<code>Private Key: </code><input id="privateKey" value="0000000000000000000000000000000000000000000000000000000000000001" />
+<br>
+<code>Transaction: </code><input id="rawTx" value="eb378502540be4008261a89472b8df71072e38e8548f9565a322b04b9c75293287038d7ea4c6800080808080" />
+<br>
+<select name="network" id="network">
+  <option value="mainnet">mainnet</option>
+  <option value="rinkeby">rinkeby</option>
+</select>
+<br><br>
+<button onClick="signTx()">Sign</button>
+<br><br>
+<code style="word-wrap: break-word;" id="signedTx"></code>
+
+<script>
+  async function signTx() {
+    const privateKey = document.getElementById("privateKey").value;
+    const rawTx = document.getElementById("rawTx").value;
+    const network = document.getElementById("network").value;
+    console.log({privateKey, rawTx, network})
+
+    // browserify https://www.npmjs.com/package/ethereumjs-tx
+    const tx = new EthereumTx(rawTx, { chain: network });
+    tx.sign(new Buffer(privateKey, "hex"));
+    const signedTx = "0x" + tx.serialize().toString("hex");
+
+    // display
+    document.getElementById("signedTx").innerHTML = signedTx
+  }
+</script>
